@@ -1,0 +1,34 @@
+<html>
+    <body>
+        <script>
+            let balance_amt=1000
+            let trans_type=prompt("Enter transaction type")
+            switch (trans_type){
+                case "withdraw":
+                    let withdraw_amt=parseInt(prompt("Enter withdraw amount"))
+                    if (withdraw_amt<balance_amt){
+                        balance_amt=balance_amt-withdraw_amt;
+                        console.log("Remaining Balance is",balance_amt);
+                    }
+                    else{
+                        console.log("Insufficient Balance");
+                    }
+                    break;
+
+                case "deposit":
+                    let deposit_amt=parseInt(prompt("Enter deposit amount"));
+                    balance_amt=balance_amt+deposit_amt;
+                    console.log("Total Balance :",balance_amt);
+                    break;
+
+                case "balance":
+                    console.log("Balance :",balance_amt);
+                    break;
+
+                default:
+                    console.log("Invalid Transaction type");
+                    break;
+            }
+        </script>
+    </body>
+</html>

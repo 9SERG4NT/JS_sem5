@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Game NPC Decision Logic</title>
+</head>
+<body>
+
+  <h2>NPC Reaction Simulator</h2>
+  <button onclick="npcReaction()">Check NPC Reaction</button>
+  <p id="npcResponse"></p>
+
+  <script>
+    function npcReaction() {
+      // Gather inputs
+      let health = parseInt(prompt("Player health (0-100):"), 10);
+      let reputation = parseInt(prompt("Player reputation (-50 to +50):"), 10);
+      let inventoryRaw = prompt("Player inventory items (comma separated, e.g., sword,magic ring):");
+      let inventory = inventoryRaw ? inventoryRaw.toLowerCase().split(",").map(i => i.trim()) : [];
+      let recentlyHealed = confirm("Did the player recently heal a lot? (OK for yes, Cancel for no)");
+      let previouslyAttacked = confirm("Did the player previously attack the NPC? (OK for yes, Cancel for no)");
+
+      let response = "";
+
+      // Validate inputs
+      if (isNaN(health) || health < 0 || health > 100) {
+        response = "Invalid health input.";
+        document.getElementById("npcResponse").textContent = response;
+        return;
+      }
+      if (isNaN(reputation) || reputation < -50 || reputation > 50) {
+        response = "Invalid reputation input.";
+        document.getElementById("npcResponse").textContent = response;
+        return;
+      }
+
+      // Start decision logic
+      if (health < 30 && reputation > 20) {
+        response = "NPC: You are hurt but well respected. I will help you recover.";
+      }
+      else if (reputation < -40 && inventory.includes("legendary item")) {
+        response = "NPC: You are feared and disliked, but that legendary item intrigues me. I'll watch you closely.";
+      }
+      else if (recentlyHealed && previouslyAttacked) {
+        response = "NPC: I see you healed after attacking me. I don't trust you anymore.";
+      }
+      else if (reputation > 10 && inventory.includes("magic ring")) {
+        response = "NPC: Your reputation and magical possessions make you an ally.";
+      }
+      else if (health < 20) {
+        response = "NPC: You're in bad shape. Need help?";
+      }
+      else if (reputation < -30) {
+        response = "NPC: Your reputation precedes you. Stay away.";
+      }
+      else if (inventory.length === 0) {
+        response = "NPC: You are unarmed and unknown. Be careful.";
+      }
+      else {
+        response = "NPC: I don't know what to make of you. Be cautious.";
+      }
+
+      document.getElementById("npcResponse").textContent = response;
+    }
+  </script>
+
+</body>
+</html>

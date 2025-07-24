@@ -1,0 +1,49 @@
+<html>
+    <body>
+    <script>
+        let keyword = prompt("Enter emotion (e.g., tired, confused, excited):");
+        let score = parseInt(prompt("Enter score (-10 to +10):"));
+
+        switch (keyword) {
+            case "tired":
+                if (score >= 6) {
+                    console.log("Powering through even when tired? You deserve a proper nap soon.");
+                } else if (score <= -2) {
+                    console.log("Sounds like you're wiped out. Take it easy for a bit.");
+                } else {
+                    console.log("Tired vibes detected. Maybe a walk or snack could help?");
+                }
+                break;
+
+            case "confused":
+                if (score >= 3) {
+                    console.log("You’re a little unsure, but it sounds like you’ve got the energy to figure it out.");
+                } else if (score <= -3) {
+                    console.log("Totally get that—it’s easy to feel lost. Want to walk through it together?");
+                } else {
+                    console.log("Confused, huh? Let’s try untangling things one piece at a time.");
+                }
+                break;
+
+            case "excited":
+                if (score >= 5) {
+                    console.log("Love that energy! What’s got you buzzing?");
+                } else {
+                    console.log("Excited but cautious? That’s a solid mix—what’s on your mind?");
+                }
+                break;
+
+            default:
+                if (score === 0) {
+                    console.log("Neutral zone. Not getting a clear vibe—want to share what's up?");
+                } else if (score > 0) {
+                    console.log("You're sounding alright! Want to chat about something fun?");
+                } else {
+                    console.log("I sense you're not in the best spot. Want to vent or take a breather together?");
+                }
+                break;
+        }
+    </script>
+</body>
+
+</html>
