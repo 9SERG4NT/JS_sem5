@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>Form Submission</title></head>
+<body>
+  <h2>Submit Your Marks</h2>
+  <form id="myForm">
+    <input type="number" name="marks" placeholder="Enter your marks" />
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    document.getElementById("myForm").addEventListener("submit", function(e) {
+      e.preventDefault(); // Prevent page reload
+      const marks = this.marks.value;
+      alert("Marks entered: " + marks);
+    });
+  </script>
+</body>
+</html>

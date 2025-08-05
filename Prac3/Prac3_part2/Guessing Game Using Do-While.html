@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Guessing Game v2</title></head>
+<body>
+<script>
+  const randomNumber = Math.floor(Math.random() * 10) + 1;
+  let guess;
+  do {
+    guess = parseInt(prompt("Guess a number between 1 and 10:"));
+    if (guess !== randomNumber) alert("Try again!");
+  } while (guess !== randomNumber);
+  alert("You guessed it! 🎉");
+</script>
+</body>
+</html>

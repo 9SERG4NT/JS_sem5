@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Grading System</title>
+</head>
+<body>
+  <h2>Enter Your Marks</h2>
+
+  <input type="number" id="marks" placeholder="Enter marks" />
+  <button onclick="getGrade()">Submit</button>
+
+  <p id="result"></p>
+
+  <script>
+    function getGrade() {
+      let marks = parseFloat(document.getElementById("marks").value);
+      let grade = "";
+
+      if (isNaN(marks)) {
+        grade = "Please enter a valid number!";
+      } else if (marks >= 90) {
+        grade = "Grade: A";
+      } else if (marks >= 80) {
+        grade = "Grade: B";
+      } else if (marks >= 70) {
+        grade = "Grade: C";
+      } else if (marks >= 60) {
+        grade = "Grade: D";
+      } else {
+        grade = "Grade: F";
+      }
+
+      document.getElementById("result").innerText = grade;
+    }
+  </script>
+</body>
+</html>

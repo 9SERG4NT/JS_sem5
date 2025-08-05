@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>File Upload</title></head>
+<body>
+  <h2>Upload a File</h2>
+  <input type="file" id="fileInput">
+
+  <script>
+    document.getElementById("fileInput").addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        alert("Selected file: " + file.name);
+      }
+    });
+  </script>
+</body>
+</html>
