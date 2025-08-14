@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Functions, Scope & Error Handling</title>
+</head>
+<body>
+    <h1>Functions, Scope & Error Handling Demo</h1>
+    <p>Open the browser console (F12) to see the output.</p>
+    <script>
+        // ====================================================================
+        // PART 1: FUNCTIONS, SCOPE, AND CLOSURES
+        // ====================================================================
+
+        // Task 1: Function Declaration
+        // This function takes two numbers and returns the greater one.
+        function findGreaterNumber(num1, num2) {
+            if (num1 > num2) {
+                return num1;
+            } else {
+                return num2;
+            }
+        }
+
+        console.log("--- Task 1: Function Declaration ---");
+        console.log("The greater number between 10 and 5 is:", findGreaterNumber(10, 5));
+        console.log("The greater number between 2 and 7 is:", findGreaterNumber(2, 7));
+
+
+        // ---
+        // Task 2: Function Expression
+        // This function expression calculates the factorial of a number.
+        const factorial = function(n) {
+            if (n < 0) {
+                return "Factorial is not defined for negative numbers.";
+            }
+            let result = 1;
+            for (let i = 2; i <= n; i++) {
+                result *= i;
+            }
+            return result;
+        };
+
+        console.log("\n--- Task 2: Function Expression ---");
+        console.log("The factorial of 5 is:", factorial(5));
+        console.log("The factorial of 0 is:", factorial(0));
+
+
+        // ---
+        // Task 3: Arrow Function
+        // This arrow function checks if a string contains "JavaScript".
+        const hasJavaScript = (str) => str.includes("JavaScript");
+
+        console.log("\n--- Task 3: Arrow Function ---");
+        console.log("Does 'I love learning JavaScript!' contain 'JavaScript'?", hasJavaScript("I love learning JavaScript!"));
+        console.log("Does 'Hello, World!' contain 'JavaScript'?", hasJavaScript("Hello, World!"));
+
+
+        // ---
+        // Task 4: Closure
+        // This closure returns a secret message only when the password is correct.
+        function createSecretKeeper(secretMessage) {
+            const secret = secretMessage;
+            const password = "mysecretpassword";
+
+            return function(inputPassword) {
+                if (inputPassword === password) {
+                    return secret;
+                } else {
+                    return "Incorrect password!";
+                }
+            };
+        }
+
+        const getSecret = createSecretKeeper("The secret is to always be curious.");
+
+        console.log("\n--- Task 4: Closure ---");
+        console.log("Trying with a wrong password:", getSecret("wrongpassword"));
+        console.log("Trying with the correct password:", getSecret("mysecretpassword"));
+
+
+        // ====================================================================
+        // PART 2: ERROR HANDLING, REVERSE NUMBER & PALINDROME
+        // ====================================================================
+
+        // This function reverses a number and checks if it's a palindrome, with error handling.
+        function reverseAndCheckPalindrome(num) {
+            try {
+                if (typeof num !== 'number' || isNaN(num)) {
+                    throw new Error("Input must be a number.");
+                }
+                
+                const originalNum = num;
+                const isNegative = num < 0;
+                const stringNum = Math.abs(num).toString();
+                const reversedString = stringNum.split('').reverse().join('');
+                const reversedNum = isNegative ? -parseInt(reversedString) : parseInt(reversedString);
+
+                const isPalindrome = originalNum.toString() === reversedString;
+
+                return {
+                    original: originalNum,
+                    reversed: reversedNum,
+                    isPalindrome: isPalindrome
+                };
+            } catch (error) {
+                return { error: error.message };
+            }
+        }
+
+        console.log("\n--- Part 2: Reverse & Palindrome Checker ---");
+        console.log("Checking 12321:", reverseAndCheckPalindrome(12321));
+        console.log("Checking 12345:", reverseAndCheckPalindrome(12345));
+        console.log("Checking a negative number (-121):", reverseAndCheckPalindrome(-121));
+        console.log("Checking a string input ('abc'):", reverseAndCheckPalindrome("abc"));
+    </script>
+</body>
+</html>
