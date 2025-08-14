@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Competition Performance Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .winner {
+            box-shadow: 0 0 30px 10px rgba(34, 197, 94, 0.8), 0 0 15px 5px rgba(34, 197, 94, 0.6);
+            animation: glow 1.5s infinite alternate ease-in-out;
+        }
+        
+        .result-card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s forwards ease-out;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 10px 5px rgba(34, 197, 94, 0.6), 0 0 20px 10px rgba(34, 197, 94, 0.4);
+            }
+            to {
+                box-shadow: 0 0 30px 10px rgba(34, 197, 94, 0.8), 0 0 15px 5px rgba(34, 197, 94, 0.6);
+            }
+        }
+
+        .input-group label {
+            font-weight: 500;
+        }
+        
+        .score-display {
+            font-weight: 700;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 bg-gray-100 text-gray-800">
+    <main class="w-full max-w-5xl bg-white rounded-2xl shadow-xl p-8 mb-8">
+        <h1 class="text-4xl font-bold text-center text-green-700 mb-2">Club Competition Tracker</h1>
+        <p class="text-center text-gray-600 mb-8">
+            Enter the scores for three teams and see the results instantly!
+        </p>
+
+        <form id="trackerForm" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Team 1 -->
+            <div class="team-card bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <h2 class="text-xl font-bold text-green-600 mb-4">Team: The Coders</h2>
+                <div class="space-y-4">
+                    <div class="input-group">
+                        <label for="team1_id" class="block text-sm">Team ID (PRN):</label>
+                        <input type="number" id="team1_id" value="2301" min="0" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="team1_r1" class="block text-sm">Round 1 Score (0-100): <span id="team1_r1_val" class="score-display">0</span></label>
+                        <input type="range" id="team1_r1" value="0" min="0" max="100" class="w-full mt-1 appearance-none bg-green-200 h-2 rounded-lg" oninput="document.getElementById('team1_r1_val').innerText = this.value">
+                    </div>
+                    <div class="input-group">
+                        <label for="team1_r2" class="block text-sm">Round 2 Score (0-100):</label>
+                        <input type="number" id="team1_r2" value="0" min="0" max="100" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="team1_r3" class="block text-sm">Round 3 Category:</label>
+                        <select id="team1_r3" class="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-green-500" required></select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team 2 -->
+            <div class="team-card bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <h2 class="text-xl font-bold text-green-600 mb-4">Team: Data Wizards</h2>
+                <div class="space-y-4">
+                    <div class="input-group">
+                        <label for="team2_id" class="block text-sm">Team ID (PRN):</label>
+                        <input type="number" id="team2_id" value="2302" min="0" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="team2_r1" class="block text-sm">Round 1 Score (0-100): <span id="team2_r1_val" class="score-display">0</span></label>
+                        <input type="range" id="team2_r1" value="0" min="0" max="100" class="w-full mt-1 appearance-none bg-green-200 h-2 rounded-lg" oninput="document.getElementById('team2_r1_val').innerText = this.value">
+                    </div>
+                    <div class="input-group">
+                        <label for="team2_r2" class="block text-sm">Round 2 Score (0-100):</label>
+                        <input type="number" id="team2_r2" value="0" min="0" max="100" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="team2_r3" class="block text-sm">Round 3 Category:</label>
+                        <select id="team2_r3" class="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-green-500" required></select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team 3 -->
+            <div class="team-card bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <h2 class="text-xl font-bold text-green-600 mb-4">Team: Pixel Pirates</h2>
+                <div class="space-y-4">
+                    <div class="input-group">
+                        <label for="team3_id" class="block text-sm">Team ID (PRN):</label>
+                        <input type="number" id="team3_id" value="2303" min="0" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="team3_r1" class="block text-sm">Round 1 Score (0-100): <span id="team3_r1_val" class="score-display">0</span></label>
+                        <input type="range" id="team3_r1" value="0" min="0" max="100" class="w-full mt-1 appearance-none bg-green-200 h-2 rounded-lg" oninput="document.getElementById('team3_r1_val').innerText = this.value">
+                    </div>
+                    <div class="input-group">
+                        <label for="team3_r2" class="block text-sm">Round 2 Score (0-100):</label>
+                        <input type="number" id="team3_r2" value="0" min="0" max="100" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="team3_r3" class="block text-sm">Round 3 Category:</label>
+                        <select id="team3_r3" class="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-green-500" required></select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="md:col-span-3 text-center mt-6">
+                <button type="submit" class="w-full md:w-auto px-8 py-3 bg-green-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition-colors">
+                    Calculate Scores
+                </button>
+            </div>
+        </form>
+
+        <section id="resultsSection" class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6"></section>
+    </main>
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Global Data and Configuration ---
+            const criteriaWeightings = [0.4, 0.3, 0.3]; // Round 1, Round 2, Round 3
+            const round3Categories = ["Technicality", "Creativity", "Innovation", "Presentation"];
+            const teamData = [
+                { name: "The Coders", id: "2301" },
+                { name: "Data Wizards", id: "2302" },
+                { name: "Pixel Pirates", id: "2303" }
+            ];
+
+            // --- UI Elements ---
+            const form = document.getElementById('trackerForm');
+            const resultsSection = document.getElementById('resultsSection');
+            const datetimeElement = document.getElementById('datetime');
+
+            // --- Helper Functions ---
+
+            // Fisher-Yates shuffle algorithm to randomize the array
+            function shuffle(array) {
+                let currentIndex = array.length, randomIndex;
+                while (currentIndex !== 0) {
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex--;
+                    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+                }
+                return array;
+            }
+
+            // Populates the dropdowns with a randomized list of categories
+            function populateDropdowns() {
+                const shuffledCategories = shuffle([...round3Categories]);
+                const dropdowns = document.querySelectorAll('select[id$="_r3"]');
+                dropdowns.forEach(dropdown => {
+                    dropdown.innerHTML = '<option value="" disabled selected>Select Category</option>';
+                    shuffledCategories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category;
+                        option.textContent = category;
+                        dropdown.appendChild(option);
+                    });
+                });
+            }
+
+            // Calculates the weighted total, including bonus points
+            function calculateWeightedTotal(scores, category) {
+                const [r1, r2, r3] = scores;
+                let total = (r1 * criteriaWeightings[0]) + (r2 * criteriaWeightings[1]) + (r3 * criteriaWeightings[2]);
+                
+                // Bonus Points Logic
+                if (r2 > 80) {
+                    total += 5; // Bonus for a high Round 2 score
+                }
+                if (category === 'Innovation') {
+                    total += 3; // Bonus for 'Innovation' category
+                }
+                
+                return total;
+            }
+
+            // Assigns a grade based on the total score
+            function assignGrade(total) {
+                if (total >= 90) {
+                    return 'A';
+                } else if (total >= 75) {
+                    return 'B';
+                } else if (total >= 60) {
+                    return 'C';
+                } else {
+                    return 'F';
+                }
+            }
+            
+            // Assigns a remark based on the grade using a switch statement
+            function assignRemark(grade) {
+                switch (grade) {
+                    case 'A':
+                        return 'Outstanding';
+                    case 'B':
+                        return 'Strong';
+                    case 'C':
+                        return 'Average';
+                    case 'F':
+                        return 'Needs Improvement';
+                    default:
+                        return 'N/A';
+                }
+            }
+
+            // Renders the results for a single team
+            function renderResultCard(team, isWinner, delay) {
+                const gradeClass = getGradeColor(team.grade);
+                const card = document.createElement('div');
+                card.className = `result-card p-6 rounded-xl shadow-md text-center border-2 transition-all ${isWinner ? 'winner bg-green-50 border-green-400' : 'bg-gray-50 border-gray-200'}`;
+                card.style.animationDelay = `${delay}ms`;
+
+                card.innerHTML = `
+                    <h3 class="text-2xl font-bold text-gray-900">${team.name}</h3>
+                    <p class="text-sm text-gray-500 mb-4">Team ID: ${team.id}</p>
+                    <div class="space-y-2 mt-4">
+                        <p class="text-lg">Weighted Total: <span class="font-bold text-green-700">${team.total.toFixed(2)}</span></p>
+                        <p class="text-lg">Grade: <span class="font-bold ${gradeClass}">${team.grade}</span></p>
+                        <p class="text-lg">Remark: <span class="font-bold text-gray-700">${team.remark}</span></p>
+                    </div>
+                `;
+                resultsSection.appendChild(card);
+            }
+
+            // Returns a color class for the grade
+            function getGradeColor(grade) {
+                switch (grade) {
+                    case 'A': return 'text-green-600';
+                    case 'B': return 'text-blue-600';
+                    case 'C': return 'text-yellow-600';
+                    case 'F': return 'text-red-600';
+                    default: return 'text-gray-600';
+                }
+            }
+
+            // Updates the footer with the current date and time
+            function updateFooterDateTime() {
+                const now = new Date();
+                datetimeElement.textContent = `Date: ${now.toLocaleDateString()} | Time: ${now.toLocaleTimeString()}`;
+            }
+
+            // --- Main Submission Logic ---
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                resultsSection.innerHTML = '';
+                
+                const results = [];
+                let maxScore = -1;
+                let winnerIndex = -1;
+                
+                for (let i = 1; i <= 3; i++) {
+                    const name = teamData[i-1].name;
+                    const id = document.getElementById(`team${i}_id`).value;
+                    const r1 = parseFloat(document.getElementById(`team${i}_r1`).value);
+                    const r2 = parseFloat(document.getElementById(`team${i}_r2`).value);
+                    const r3Category = document.getElementById(`team${i}_r3`).value;
+                    
+                    // --- Validation ---
+                    if (r1 < 0 || r1 > 100 || r2 < 0 || r2 > 100) {
+                        alert(`Team ${i} scores must be between 0 and 100.`);
+                        return;
+                    }
+                    
+                    // --- Processing ---
+                    const total = calculateWeightedTotal([r1, r2, 30], r3Category); // Placeholder score of 30 for Round 3
+                    const grade = assignGrade(total);
+                    const remark = assignRemark(grade);
+
+                    results.push({ name, id, total, grade, remark });
+
+                    // Find the highest score
+                    if (total > maxScore) {
+                        maxScore = total;
+                        winnerIndex = i - 1;
+                    }
+                }
+
+                // --- Tie-breaker Logic ---
+                const tiedTeams = results.filter(r => r.total === maxScore);
+                if (tiedTeams.length > 1) {
+                    // Tie-breaker based on the first letter of the team name (higher char code wins)
+                    let tieWinner = tiedTeams.reduce((prev, current) => {
+                        return (prev.name.charCodeAt(0) > current.name.charCodeAt(0)) ? prev : current;
+                    });
+                    winnerIndex = results.findIndex(r => r.name === tieWinner.name);
+                }
+
+                // --- Display Results ---
+                results.forEach((result, index) => {
+                    const isWinner = index === winnerIndex;
+                    renderResultCard(result, isWinner, index * 200); // Stagger the animation
+                });
+                
+                updateFooterDateTime();
+            });
+
+            // Initial setup
+            populateDropdowns();
+            updateFooterDateTime();
+            setInterval(updateFooterDateTime, 1000); // Update time every second
+        });
+    </script>
+</body>
+</html>
