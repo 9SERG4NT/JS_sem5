@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Factorial Hash</title></head>
+<body>
+  <script>
+    const generateFactorial = function(n) {
+      return n <= 1 ? 1 : n * generateFactorial(n - 1);
+    };
+
+    console.log("Factorial Hash:", generateFactorial(5));
+  </script>
+</body>
+</html>

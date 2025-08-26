@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>Word Palindrome</title></head>
+<body>
+  <script>
+    function isWordPalindrome(word) {
+      const cleaned = word.replace(/\s+/g, '').toLowerCase();
+      return cleaned === cleaned.split('').reverse().join('');
+    }
+
+    console.log("Is Palindrome?", isWordPalindrome("Race car"));
+  </script>
+</body>
+</html>

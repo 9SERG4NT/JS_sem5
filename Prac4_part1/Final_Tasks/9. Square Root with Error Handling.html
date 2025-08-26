@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Square Root</title></head>
+<body>
+  <script>
+    function safeRoot(num) {
+      try {
+        if (num < 0) throw new Error("Negative numbers not allowed");
+        return Math.sqrt(num);
+      } catch (e) {
+        return e.message;
+      }
+    }
+
+    console.log("Square Root:", safeRoot(-9));
+  </script>
+</body>
+</html>

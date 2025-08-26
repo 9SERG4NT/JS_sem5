@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Prime Checker</title></head>
+<body>
+  <script>
+    const isPrime = (num) => {
+      try {
+        if (num < 2 || !Number.isInteger(num)) throw new Error("Invalid input");
+        for (let i = 2; i <= Math.sqrt(num); i++) {
+          if (num % i === 0) return false;
+        }
+        return true;
+      } catch (e) {
+        return e.message;
+      }
+    };
+
+    console.log("Is Prime?", isPrime(7));
+  </script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Locker System Prototype</title>
+</head>
+<body>
+
+    <div>
+        <h1>Digital Locker System</h1>
+        <p>This prototype demonstrates core functionalities for securing data and providing useful utilities, all within a modern, responsive web interface.</p>
+        
+        <div>
+
+            <!-- UI for each menu item -->
+            <div>
+                <h2>1. Compare two PINs</h2>
+                <label for="pin1">PIN 1:</label>
+                <input type="number" id="pin1" placeholder="Enter first PIN">
+                <label for="pin2">PIN 2:</label>
+                <input type="number" id="pin2" placeholder="Enter second PIN">
+                <button onclick="comparePins()">Compare</button>
+            </div>
+
+            <div>
+                <h2>2. Factorial Hash</h2>
+                <label for="hashNum">Number:</label>
+                <input type="number" id="hashNum" placeholder="Enter a number">
+                <button onclick="generateHash()">Generate Hash</button>
+            </div>
+
+            <div>
+                <h2>3. Check for "JavaScript"</h2>
+                <label for="jsMessage">Note:</label>
+                <input type="text" id="jsMessage" placeholder="Enter your note">
+                <button onclick="checkJs()">Check</button>
+            </div>
+
+            <div>
+                <h2>4. Secure Message</h2>
+                <label for="secretMsg">Secret Message:</label>
+                <input type="text" id="secretMsg" placeholder="Enter a secret message">
+                <label for="accessPin">Access PIN (Hint: 1234):</label>
+                <input type="password" id="accessPin" placeholder="Enter PIN to access">
+                <div>
+                    <button onclick="storeMessage()">Store</button>
+                    <button onclick="accessMessage()">Access</button>
+                </div>
+            </div>
+
+            <div>
+                <h2>5. Reverse & Palindrome</h2>
+                <label for="reverseNum">Number:</label>
+                <input type="number" id="reverseNum" placeholder="Enter a number">
+                <button onclick="reverseAndCheck()">Process</button>
+            </div>
+
+            <div>
+                <h2>6. Check Word Palindrome</h2>
+                <label for="wordCheck">Word/Phrase:</label>
+                <input type="text" id="wordCheck" placeholder="Enter a word or phrase">
+                <button onclick="checkWord()">Check</button>
+            </div>
+
+            <div>
+                <h2>7. Find Square Root</h2>
+                <label for="sqrtNum">Number:</label>
+                <input type="number" id="sqrtNum" placeholder="Enter a number">
+                <button onclick="findSqrt()">Calculate</button>
+            </div>
+            
+            <div>
+                <h2>8. Check for Prime Number</h2>
+                <label for="primeNum">Number:</label>
+                <input type="number" id="primeNum" placeholder="Enter a number">
+                <button onclick="checkPrime()">Check</button>
+            </div>
+
+        </div>
+
+        <div>
+            <h3>Console Output:</h3>
+            <pre id="output"></pre>
+        </div>
+    </div>
+
+<script>
+    // Part 1: Functions, Scope, and Closures
+
+    // 1. Function Declarations: getGreater()
+    function getGreater(a, b) {
+        return a > b ? a : b;
+    }
+
+    // 2. Function Expressions: factorial()
+    const factorial = function(n) {
+        if (n < 0 || !Number.isInteger(n)) return "Error: Invalid input. Must be a non-negative integer.";
+        if (n === 0) return 1;
+        return n * factorial(n - 1);
+    };
+
+    // 3. Arrow Functions: checkScript()
+    const checkScript = (str) => typeof str === 'string' && str.toLowerCase().includes("javascript");
+
+    // 4. Closures: secureMessage()
+    let secretMessageLocker; // Variable to hold the closure instance
+    function secureMessage(secret) {
+        // The closure retains access to the 'secret' variable
+        return function(passwordAttempt) {
+            // This inner function is the only way to access the secret
+            if (passwordAttempt === "1234") {
+                return `Your secret message is: "${secret}"`;
+            } else {
+                return "Access Denied";
+            }
+        };
+    }
+
+    // Part 2: Error Handling & Palindrome Utilities
+
+    // 1. Reverse Number with Error Handling
+    function reverseNumber(num) {
+        try {
+            if (typeof num !== 'number' || isNaN(num)) {
+                throw new Error("Invalid input: Please enter a valid number.");
+            }
+            const isNegative = num < 0;
+            const numStr = Math.abs(num).toString();
+            const reversedStr = numStr.split('').reverse().join('');
+            return isNegative ? -parseInt(reversedStr, 10) : parseInt(reversedStr, 10);
+        } catch (error) {
+            return `Error: ${error.message}`;
+        }
+    }
+
+    // 2. Palindrome PIN Check
+    function isPalindrome(num) {
+        try {
+            if (typeof num !== 'number' || isNaN(num)) {
+                throw new Error("Invalid input: Please enter a valid number.");
+            }
+            const numStr = Math.abs(num).toString();
+            const reversedStr = numStr.split('').reverse().join('');
+            return numStr === reversedStr;
+        } catch (error) {
+            return `Error: ${error.message}`;
+        }
+    }
+
+    // 3. Word Palindrome Check
+    function isWordPalindrome(str) {
+        // Normalize the string by removing spaces and converting to lowercase
+        const cleanedStr = str.replace(/\s/g, '').toLowerCase();
+        const reversedStr = cleanedStr.split('').reverse().join('');
+        return cleanedStr === reversedStr;
+    }
+
+    // 4. Square Root with Error Handling
+    function getSquareRoot(num) {
+        try {
+            if (typeof num !== 'number' || isNaN(num) || num < 0) {
+                throw new Error("Negative numbers or invalid input are not allowed.");
+            }
+            return Math.sqrt(num);
+        } catch (error) {
+            return `Error: ${error.message}`;
+        }
+    }
+
+    // 5. Prime Number Checker with Arrow Function
+    const isPrime = (num) => {
+        try {
+            if (typeof num !== 'number' || !Number.isInteger(num) || num <= 1) {
+                throw new Error("Input must be an integer greater than 1.");
+            }
+            for (let i = 2; i <= Math.sqrt(num); i++) {
+                if (num % i === 0) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (error) {
+            return `Error: ${error.message}`;
+        }
+    };
+
+    // --- UI Interaction and Program Simulation ---
+
+    const outputElement = document.getElementById('output');
+
+    // Helper function to update the output area
+    function updateOutput(message) {
+        outputElement.textContent = message;
+    }
+
+    // 1. Compare PINs
+    function comparePins() {
+        const pin1 = parseInt(document.getElementById('pin1').value, 10);
+        const pin2 = parseInt(document.getElementById('pin2').value, 10);
+        if (isNaN(pin1) || isNaN(pin2)) {
+            updateOutput("Please enter valid numbers for both PINs.");
+        } else {
+            const strongerPin = getGreater(pin1, pin2);
+            updateOutput(`Comparing ${pin1} and ${pin2}.\nThe stronger PIN is: ${strongerPin}`);
+        }
+    }
+
+    // 2. Generate Factorial Hash
+    function generateHash() {
+        const num = parseInt(document.getElementById('hashNum').value, 10);
+        const hashResult = factorial(num);
+        updateOutput(`The factorial hash for ${num} is:\n${hashResult}`);
+    }
+
+    // 3. Check for "JavaScript"
+    function checkJs() {
+        const message = document.getElementById('jsMessage').value;
+        const result = checkScript(message);
+        updateOutput(`Does the note contain "JavaScript"?\n${result}`);
+    }
+
+    // 4. Store and Access Secret Message
+    function storeMessage() {
+        const secret = document.getElementById('secretMsg').value;
+        secretMessageLocker = secureMessage(secret);
+        updateOutput("Secret message stored! Now try to access it.");
+    }
+
+    function accessMessage() {
+        if (!secretMessageLocker) {
+            updateOutput("Error: Please store a message first using the 'Store Message' button.");
+            return;
+        }
+        const passwordAttempt = document.getElementById('accessPin').value;
+        const result = secretMessageLocker(passwordAttempt);
+        updateOutput(result);
+    }
+
+    // 5. Reverse Number & Check Palindrome
+    function reverseAndCheck() {
+        const num = parseFloat(document.getElementById('reverseNum').value);
+        const reversed = reverseNumber(num);
+        const isPal = isPalindrome(num);
+        updateOutput(`Original Number: ${num}\nReversed: ${reversed}\nIs it a palindrome? ${isPal}`);
+    }
+
+    // 6. Check Word Palindrome
+    function checkWord() {
+        const word = document.getElementById('wordCheck').value;
+        const isPal = isWordPalindrome(word);
+        updateOutput(`Is "${word}" a word palindrome? ${isPal}`);
+    }
+
+    // 7. Find Square Root
+    function findSqrt() {
+        const num = parseFloat(document.getElementById('sqrtNum').value);
+        const result = getSquareRoot(num);
+        updateOutput(`The square root is: ${result}`);
+    }
+
+    // 8. Check for Prime Number
+    function checkPrime() {
+        const num = parseInt(document.getElementById('primeNum').value, 10);
+        const result = isPrime(num);
+        updateOutput(`Is ${num} a prime number? ${result}`);
+    }
+</script>
+
+</body>
+</html>

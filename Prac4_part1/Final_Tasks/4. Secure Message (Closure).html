@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>Secure Message</title></head>
+<body>
+  <script>
+    function createSecureMessage(secret, password) {
+      return function(attempt) {
+        return attempt === password ? `Secret: ${secret}` : "Access Denied";
+      };
+    }
+
+    const locker = createSecureMessage("My secret note", "1234");
+    console.log(locker("1111")); // Access Denied
+    console.log(locker("1234")); // Secret: My secret note
+  </script>
+</body>
+</html>

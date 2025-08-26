@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>Reverse Number</title></head>
+<body>
+  <script>
+    function reverseNumber(num) {
+      try {
+        if (typeof num !== "number") throw new Error("Invalid input");
+        const reversed = Math.abs(num).toString().split('').reverse().join('');
+        return num < 0 ? -parseInt(reversed) : parseInt(reversed);
+      } catch (e) {
+        return e.message;
+      }
+    }
+
+    console.log("Reversed:", reverseNumber(-1234));
+  </script>
+</body>
+</html>

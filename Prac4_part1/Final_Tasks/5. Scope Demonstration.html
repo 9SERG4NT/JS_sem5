@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>Scope Demo</title></head>
+<body>
+  <script>
+    let lockerName = "VaultX"; // Global
+
+    function showAccess(pin) {
+      let userPin = pin; // Function scope
+      if (pin.length >= 4) {
+        const tempAccess = true; // Block scope
+        console.log(lockerName, userPin, tempAccess);
+      }
+    }
+
+    showAccess("7890");
+  </script>
+</body>
+</html>

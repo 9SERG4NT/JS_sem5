@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>PIN Palindrome</title></head>
+<body>
+  <script>
+    function isPinSecure(pin) {
+      const str = pin.toString();
+      return str === str.split('').reverse().join('');
+    }
+
+    console.log("Is Palindrome?", isPinSecure(1221));
+  </script>
+</body>
+</html>
