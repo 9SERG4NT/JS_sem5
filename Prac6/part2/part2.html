@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical 6 - Part 1: String Functions</title>
+</head>
+<body>
+
+    <h1>Practical 6 - Part 1: String Functions & Operations</h1>
+
+    <p>Open the browser console (Ctrl+Shift+I or Cmd+Opt+I) to see the output for all tasks.</p>
+
+    <script>
+        // Task 1: Name Formatter
+        function formatName(name) {
+            let trimmedName = name.trim();
+            let parts = trimmedName.split(" ");
+            let formattedParts = parts.map(part => {
+                if (part.length > 0) {
+                    return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+                }
+                return "";
+            });
+            return formattedParts.join(" ");
+        }
+        let inputName = " jOhN doE ";
+        console.log("--- Task 1: Name Formatter ---");
+        console.log(`Input: "${inputName}"`);
+        console.log(`Output: "${formatName(inputName)}"`);
+
+        // Task 2: Reverse a String
+        function reverseString(str) {
+            return str.split("").reverse().join("");
+        }
+        let originalString = "JavaScript";
+        console.log("\n--- Task 2: Reverse a String ---");
+        console.log(`Original String: "${originalString}"`);
+        console.log(`Reversed String: "${reverseString(originalString)}"`);
+
+        // Task 3: Validate Email Address
+        function validateEmail(email) {
+            const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+            return emailRegex.test(email);
+        }
+        let email1 = "student@example.com";
+        let email2 = "invalid-email";
+        console.log("\n--- Task 3: Validate Email Address ---");
+        console.log(`Email "${email1}" is valid? ${validateEmail(email1)}`);
+        console.log(`Email "${email2}" is valid? ${validateEmail(email2)}`);
+
+        // Task 4: Replace Multiple Spaces with Single Space
+        function replaceMultipleSpaces(str) {
+            // The /\s+/g regex matches one or more whitespace characters globally
+            return str.replace(/\s+/g, ' ');
+        }
+        let spacedString = "JavaScript   is     fun";
+        console.log("\n--- Task 4: Replace Multiple Spaces ---");
+        console.log(`Original: "${spacedString}"`);
+        console.log(`Cleaned: "${replaceMultipleSpaces(spacedString)}"`);
+
+        // Task 5: Word Count
+        function wordCount(str) {
+            // Split the string by one or more spaces
+            let words = str.split(/\s+/).filter(word => word.length > 0);
+            return words.length;
+        }
+        let sentence = "Hello world, welcome to the JavaScript lab";
+        console.log("\n--- Task 5: Word Count ---");
+        console.log(`Sentence: "${sentence}"`);
+        console.log(`Word Count: ${wordCount(sentence)}`);
+    </script>
+
+</body>
+</html>

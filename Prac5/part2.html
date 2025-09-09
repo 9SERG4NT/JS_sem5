@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical 5 - Part 2: Objects</title>
+</head>
+<body>
+    <h1>Practical 5 - Part 2: Objects</h1>
+    <p>Open the browser console (Ctrl+Shift+I or Cmd+Opt+I) to see the output.</p>
+    <script>
+        // Task 1: Create an array of objects for students
+        let students = [
+            { id: 101, name: "Alice", marks: 65 },
+            { id: 102, name: "Bob", marks: 45 },
+            { id: 103, name: "Charlie", marks: 88 },
+            { id: 104, name: "David", marks: 52 }
+        ];
+
+        console.log("Students Data:", students);
+
+        // Task 2: Use map() to extract all student names
+        let studentNames = students.map(student => student.name);
+        console.log("Student Names:", studentNames);
+
+        // Task 3: Use filter() to select students with marks > 50
+        let highAchievers = students.filter(student => student.marks > 50);
+        console.log("Students with marks > 50:", highAchievers);
+
+        // Task 4: Use reduce() to calculate the average marks
+        let totalMarks = students.reduce((sum, student) => sum + student.marks, 0);
+        let averageMarks = totalMarks / students.length;
+        console.log("Average Marks:", averageMarks.toFixed(2));
+
+        // Task 5: Use forEach() to print a report card format
+        console.log("\n--- Report Card ---");
+        students.forEach(student => {
+            let result = student.marks > 50 ? "Pass" : "Fail";
+            console.log(`Name: ${student.name}, Marks: ${student.marks}, Result: ${result}`);
+        });
+        console.log("-------------------");
+    </script>
+</body>
+</html>

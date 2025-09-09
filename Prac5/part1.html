@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical 5 - Part 1: Array Basics</title>
+</head>
+<body>
+    <h1>Practical 5 - Part 1: Array Basics</h1>
+    <p>Open the browser console (Ctrl+Shift+I or Cmd+Opt+I) to see the output.</p>
+    <script>
+        // Task 1: Create an array of student ages and use push()
+        let studentAges = [18, 20, 19, 21, 22];
+        console.log("Original Ages:", studentAges);
+        studentAges.push(23);
+        console.log("After push(23):", studentAges);
+
+        // Task 2: Use pop() to remove the last age and display
+        studentAges.pop();
+        console.log("After pop():", studentAges);
+
+        // Task 3: Print the length of the array
+        console.log("Number of ages:", studentAges.length);
+
+        // Task 4: Use map() to calculate double of each age
+        let doubleAges = studentAges.map(age => age * 2);
+        console.log("Double of each age:", doubleAges);
+
+        // Challenge: Use map() to find the cube of each element
+        let cubedAges = studentAges.map(age => age ** 3); // Using ** for exponentiation
+        console.log("Cube of each age:", cubedAges);
+    </script>
+</body>
+</html>

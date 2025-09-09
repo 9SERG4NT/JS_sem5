@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Total Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .receipt { border: 1px solid #ccc; padding: 15px; width: 400px; }
+        .receipt h3, .receipt p { margin: 5px 0; }
+        .divider { border-top: 1px dashed #ccc; margin: 10px 0; }
+    </style>
+</head>
+<body>
+
+    <h1>Shopping Cart Total Calculator</h1>
+    <div class="receipt">
+        <h3>Receipt</h3>
+        <div id="receipt-items"></div>
+        <div class="divider"></div>
+        <p><strong>Subtotal:</strong> <span id="subtotal"></span></p>
+        <p><strong>Item Discounts:</strong> <span id="item-discounts"></span></p>
+        <p><strong>Stationery Discount:</strong> <span id="stationery-discount"></span></p>
+        <div class="divider"></div>
+        <p><strong>Final Total:</strong> <span id="final-total"></span></p>
+    </div>
+
+    <script>
+        // Part A: Setup the Cart
+        let cart = [
+            { id: 1, name: "Pen", price: 20, qty: 2, category: "stationery" },
+            { id: 2, name: "Mug", price: 150, qty: 1, category: "kitchen" },
+            { id: 3, name: "Notebook", price: 80, qty: 3, category: "stationery" },
+            { id: 4, name: "Keyboard", price: 500, qty: 1, category: "electronics" }
+        ];
+
+        // Global variables for totals
+        let subtotal = 0;
+        let totalItemDiscounts = 0;
+        let stationeryDiscount = 0;
+
+        // Part B & C: Calculate subtotal and apply item-level discounts
+        const itemsWithTotals = cart.map(item => {
+            let itemSubtotal = item.price * item.qty;
+            let itemDiscount = 0;
+
+            // Apply 5% discount if quantity is 3 or more
+            if (item.qty >= 3) {
+                itemDiscount = itemSubtotal * 0.05;
+                itemSubtotal -= itemDiscount;
+            }
+
+            totalItemDiscounts += itemDiscount;
+
+            return {
+                ...item,
+                subtotal: itemSubtotal,
+                discount: itemDiscount
+            };
+        });
+
+        // Part D: Category-Level Discount
+        const stationeryItems = cart.filter(item => item.category === "stationery");
+        const stationeryTotal = stationeryItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+        if (stationeryTotal > 200) {
+            stationeryDiscount = stationeryTotal * 0.10;
+        }
+
+        // Part E: Final Total
+        subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        
+        const finalTotal = subtotal - totalItemDiscounts - stationeryDiscount;
+
+        // Use forEach to print a formatted receipt
+        const receiptItemsDiv = document.getElementById('receipt-items');
+        itemsWithTotals.forEach(item => {
+            const itemElement = document.createElement('p');
+            let itemText = `Item: ${item.name} (x${item.qty}) = ${item.price * item.qty}`;
+            if (item.discount > 0) {
+                itemText += ` → discount applied`;
+            }
+            itemElement.textContent = itemText;
+            receiptItemsDiv.appendChild(itemElement);
+        });
+
+        document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+        document.getElementById('item-discounts').textContent = totalItemDiscounts.toFixed(2);
+        document.getElementById('stationery-discount').textContent = stationeryDiscount.toFixed(2);
+        document.getElementById('final-total').textContent = finalTotal.toFixed(2);
+    </script>
+</body>
+</html>

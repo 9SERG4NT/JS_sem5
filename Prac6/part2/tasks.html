@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex Lab Tasks</title>
+</head>
+<body>
+    <h1>Practical 6 Part 2: Regular Expressions</h1>
+
+    <h2>Task 1: Validate Mobile Number</h2>
+    <label for="mobileInput">Enter Mobile Number (10 digits starting with 6-9):</label>
+    <input type="text" id="mobileInput">
+    <button onclick="validateMobile()">Validate</button>
+    <p id="mobileResult"></p>
+
+    <h2>Task 2: Extract Dates</h2>
+    <p id="dateText">Today's date is 12/09/2025 and tomorrow will be 13/09/2025.</p>
+    <button onclick="extractDates()">Extract Dates</button>
+    <p id="datesResult"></p>
+
+    <h2>Task 3: Password Strength Checker</h2>
+    <label for="passwordInput">Enter Password:</label>
+    <input type="password" id="passwordInput">
+    <button onclick="checkPasswordStrength()">Check Strength</button>
+    <p id="passwordResult"></p>
+
+    <h2>Task 4: Find Duplicate Words</h2>
+    <p id="dupText">This is is a test test</p>
+    <button onclick="findDuplicates()">Find Duplicates</button>
+    <p id="duplicatesResult"></p>
+
+    <h2>Task 5: Extract Hashtags</h2>
+    <p id="tweetText">Learning #JavaScript is #fun and #exciting!</p>
+    <button onclick="extractHashtags()">Extract Hashtags</button>
+    <p id="hashtagsResult"></p>
+
+    <script>
+        // Task 1: Validate Mobile Number
+        function validateMobile() {
+            let mobileRegex = /^[6-9]\d{9}$/;
+            let input = document.getElementById('mobileInput').value;
+            let result = document.getElementById('mobileResult');
+            if (mobileRegex.test(input)) {
+                result.textContent = "Valid Mobile Number";
+                result.style.color = "green";
+            } else {
+                result.textContent = "Invalid Mobile Number";
+                result.style.color = "red";
+            }
+        }
+
+        // Task 2: Extract Dates
+        function extractDates() {
+            let dateRegex = /\d{2}\/\d{2}\/\d{4}/g;
+            let text = document.getElementById('dateText').textContent;
+            let dates = text.match(dateRegex);
+            document.getElementById('datesResult').textContent = "Extracted Dates: " + JSON.stringify(dates);
+        }
+
+        // Task 3: Password Strength Checker
+        function checkPasswordStrength() {
+            let passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            let input = document.getElementById('passwordInput').value;
+            let result = document.getElementById('passwordResult');
+            if (passwordRegex.test(input)) {
+                result.textContent = "Valid (Strong) Password";
+                result.style.color = "green";
+            } else {
+                result.textContent = "Invalid (Weak) Password";
+                result.style.color = "red";
+            }
+        }
+
+        // Task 4: Find Duplicate Words
+        function findDuplicates() {
+            let dupRegex = /\b(\w+)\s+\1\b/g;
+            let text = document.getElementById('dupText').textContent;
+            let duplicates = text.match(dupRegex);
+            document.getElementById('duplicatesResult').textContent = "Duplicate words: " + JSON.stringify(duplicates);
+        }
+
+        // Task 5: Extract Hashtags
+        function extractHashtags() {
+            let hashtagsRegex = /#[A-Za-z0-9_]+/g;
+            let text = document.getElementById('tweetText').textContent;
+            let hashtags = text.match(hashtagsRegex);
+            document.getElementById('hashtagsResult').textContent = "Extracted Hashtags: " + JSON.stringify(hashtags);
+        }
+    </script>
+</body>
+</html>
