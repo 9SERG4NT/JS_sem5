@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Traversal and Manipulation</title>
+</head>
+<body>
+
+    <h1>Practical 7: DOM Traversal and Manipulation</h1>
+    <hr>
+
+    <h2>Task 1: Add Items to a List</h2>
+    <div>
+        <input type="text" id="task-input" placeholder="Enter a new task...">
+        <button id="add-button">Add Task</button>
+    </div>
+    
+    <ul id="task-list"></ul>
+
+    <script>
+        const taskInput = document.getElementById('task-input');
+        const addButton = document.getElementById('add-button');
+        const taskList = document.getElementById('task-list');
+
+        function addTask() {
+            const taskText = taskInput.value.trim();
+            if (taskText === '') return; // Don't add empty tasks
+
+            const li = document.createElement('li');
+            
+            // Create the span for the task text
+            const taskTextSpan = document.createElement('span');
+            taskTextSpan.textContent = taskText;
+
+            // Create the buttons
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+
+            // Append elements to the list item
+            li.appendChild(taskTextSpan);
+            li.appendChild(editButton);
+            li.appendChild(deleteButton);
+
+            taskList.appendChild(li);
+            taskInput.value = ''; // Clear the input field
+
+            // Add event listeners
+            deleteButton.addEventListener('click', deleteTask);
+            editButton.addEventListener('click', editTask);
+        }
+
+        addButton.addEventListener('click', addTask);
+        taskInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addTask();
+            }
+        });
+
+        // Task 2: Delete Items from a List
+        function deleteTask(event) {
+            const li = event.target.parentNode;
+            li.remove();
+        }
+
+        // Task 3: Edit a Task
+        function editTask(event) {
+            const li = event.target.parentNode;
+            const taskTextSpan = li.querySelector('span');
+            const currentText = taskTextSpan.textContent;
+            
+            // Create an input field for editing
+            const editInput = document.createElement('input');
+            editInput.type = 'text';
+            editInput.value = currentText;
+            
+            // Create a save button
+            const saveButton = document.createElement('button');
+            saveButton.textContent = 'Save';
+
+            // Hide original elements
+            li.querySelector('span').style.display = 'none';
+            li.querySelector('button:nth-of-type(1)').style.display = 'none'; // Edit button
+            li.querySelector('button:nth-of-type(2)').style.display = 'none'; // Delete button
+
+            // Insert new elements for editing
+            li.prepend(editInput);
+            li.appendChild(saveButton);
+            editInput.focus();
+
+            // Handle the save action
+            saveButton.addEventListener('click', () => {
+                const newText = editInput.value.trim();
+                if (newText !== '') {
+                    taskTextSpan.textContent = newText;
+                }
+                
+                // Restore the original view
+                li.querySelector('span').style.display = '';
+                li.querySelector('button:nth-of-type(1)').style.display = '';
+                li.querySelector('button:nth-of-type(2)').style.display = '';
+                editInput.remove();
+                saveButton.remove();
+            });
+
+            // Allow saving with the Enter key
+            editInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    saveButton.click();
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
