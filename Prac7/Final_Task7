@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dice Roller</title>
+</head>
+<body>
+  <h1>Dice Roller</h1>
+  <button id="rollBtn">Roll Dice</button>
+
+  <div id="player1Dice">Player 1: 🎲</div>
+  <div id="player2Dice">Player 2: 🎲</div>
+
+  <p>Player 1 Total: <span id="total1">0</span></p>
+  <p>Player 2 Total: <span id="total2">0</span></p>
+
+  <div id="winnerMsg"></div>
+
+  <div id="history">
+    <h3>Roll History</h3>
+  </div>
+
+  <script>
+    const rollBtn = document.getElementById("rollBtn");
+    const diceFaces = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+    let total1 = 0;
+    let total2 = 0;
+
+    rollBtn.addEventListener("click", () => {
+      const roll1 = Math.floor(Math.random() * 6) + 1;
+      const roll2 = Math.floor(Math.random() * 6) + 1;
+
+      document.getElementById("player1Dice").textContent = "Player 1: " + diceFaces[roll1 - 1];
+      document.getElementById("player2Dice").textContent = "Player 2: " + diceFaces[roll2 - 1];
+
+      total1 += roll1;
+      total2 += roll2;
+
+      document.getElementById("total1").textContent = total1;
+      document.getElementById("total2").textContent = total2;
+
+      const result = document.createElement("p");
+      result.textContent = `Player 1 rolled ${roll1}, Player 2 rolled ${roll2}`;
+      document.getElementById("history").appendChild(result);
+
+      const winnerMsg = document.getElementById("winnerMsg");
+      if (roll1 > roll2) {
+        winnerMsg.textContent = "Player 1 wins this round!";
+      } else if (roll2 > roll1) {
+        winnerMsg.textContent = "Player 2 wins this round!";
+      } else {
+        winnerMsg.textContent = "It's a tie!";
+      }
+    });
+  </script>
+</body>
+</html>
