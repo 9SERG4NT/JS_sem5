@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gym Admission Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    form {
+      max-width: 400px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    span.error {
+      color: red;
+      font-size: 0.9em;
+    }
+    input[type="submit"] {
+      margin-top: 20px;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🏋️ Gym Admission Form</h2>
+  <form id="gymForm" onsubmit="return validateForm()">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required onblur="validateName()" oninput="validateName()">
+    <span id="nameError" class="error"></span>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required onblur="validateEmail()" oninput="validateEmail()">
+    <span id="emailError" class="error"></span>
+
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" required onchange="validateAge()" onblur="validateAge()">
+    <span id="ageError" class="error"></span>
+
+    <input type="submit" value="Submit">
+  </form>
+
+  <script>
+    function validateForm() {
+      const validName = validateName();
+      const validEmail = validateEmail();
+      const validAge = validateAge();
+      return validName && validEmail && validAge;
+    }
+
+    function validateName() {
+      const name = document.getElementById("name").value.trim();
+      const error = document.getElementById("nameError");
+      if (name.length < 3) {
+        error.textContent = "Name must be at least 3 characters.";
+        return false;
+      }
+      error.textContent = "";
+      return true;
+    }
+
+    function validateEmail() {
+      const email = document.getElementById("email").value.trim();
+      const error = document.getElementById("emailError");
+      const pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+      if (!pattern.test(email)) {
+        error.textContent = "Invalid email format.";
+        return false;
+      }
+      error.textContent = "";
+      return true;
+    }
+
+    function validateAge() {
+      const age = parseInt(document.getElementById("age").value);
+      const error = document.getElementById("ageError");
+      if (isNaN(age) || age < 18 || age > 60) {
+        error.textContent = "Age must be between 18 and 60.";
+        return false;
+      }
+      error.textContent = "";
+      return true;
+    }
+  </script>
+
+</body>
+</html>
