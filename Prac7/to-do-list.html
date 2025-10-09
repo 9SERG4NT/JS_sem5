@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>To-Do List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    li {
+      padding: 8px;
+      margin-bottom: 5px;
+      background-color: #f9f9f9;
+      transition: background-color 0.3s;
+    }
+    li:hover {
+      background-color: #e0e0e0;
+    }
+    .completed span {
+      text-decoration: line-through;
+      color: gray;
+    }
+    button {
+      margin-left: 5px;
+    }
+    #controls {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>To-Do List</h2>
+  <input type="text" id="taskInput" placeholder="Enter a task">
+  <button onclick="addTask()">Add</button>
+  <div id="controls">
+    <button onclick="sortTasks(true)">Sort A–Z</button>
+    <button onclick="sortTasks(false)">Sort Z–A</button>
+    <p>Total Tasks: <span id="taskCount">0</span></p>
+  </div>
+  <ul id="todoList"></ul>
+
+  <script>
+    const input = document.getElementById('taskInput');
+    const list = document.getElementById('todoList');
+    const countDisplay = document.getElementById('taskCount');
+
+    // Load tasks from localStorage
+    window.onload = () => {
+      const saved = JSON.parse(localStorage.getItem('tasks')) || [];
+      saved.forEach(text => createTask(text));
+      updateCount();
+    };
+
+    // Add task on Enter key
+    input.addEventListener('keypress', e => {
+      if (e.key === 'Enter') addTask();
+    });
+
+    function addTask() {
+      const taskText = input.value.trim();
+      if (!taskText || isDuplicate(taskText)) return;
+      createTask(taskText);
+      input.value = '';
+      saveTasks();
+      updateCount();
+    }
+
+    function isDuplicate(text) {
+      return [...list.children].some(li => li.querySelector('span').textContent === text);
+    }
+
+    function createTask(text) {
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      span.textContent = text;
+
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Edit';
+      editBtn.onclick = () => {
+        const inputField = document.createElement('input');
+        inputField.type = 'text';
+        inputField.value = span.textContent;
+        li.insertBefore(inputField, span);
+        li.removeChild(span);
+        editBtn.style.display = 'none';
+
+        inputField.addEventListener('keypress', e => {
+          if (e.key === 'Enter') {
+            const newText = inputField.value.trim();
+            if (newText && !isDuplicate(newText)) {
+              span.textContent = newText;
+              li.insertBefore(span, inputField);
+              li.removeChild(inputField);
+              editBtn.style.display = 'inline';
+              saveTasks();
+              updateCount();
+            }
+          }
+        });
+      };
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.onclick = () => {
+        if (confirm('Are you sure you want to delete this task?')) {
+          li.remove();
+          saveTasks();
+          updateCount();
+        }
+      };
+
+      const completeBtn = document.createElement('button');
+      completeBtn.textContent = 'Complete';
+      completeBtn.onclick = () => {
+        li.classList.toggle('completed');
+        saveTasks();
+      };
+
+      li.appendChild(span);
+      li.appendChild(editBtn);
+      li.appendChild(deleteBtn);
+      li.appendChild(completeBtn);
+      list.appendChild(li);
+    }
+
+    function updateCount() {
+      countDisplay.textContent = list.children.length;
+    }
+
+    function saveTasks() {
+      const tasks = [...list.children].map(li => li.querySelector('span').textContent);
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    function sortTasks(asc = true) {
+      const items = [...list.children];
+      items.sort((a, b) => {
+        const textA = a.querySelector('span').textContent.toLowerCase();
+        const textB = b.querySelector('span').textContent.toLowerCase();
+        return asc ? textA.localeCompare(textB) : textB.localeCompare(textA);
+      });
+      list.innerHTML = '';
+      items.forEach(item => list.appendChild(item));
+    }
+  </script>
+</body>
+</html>
