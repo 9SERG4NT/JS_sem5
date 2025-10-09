@@ -1,0 +1,388 @@
+<!--
+    File generated on Thursday, October 9, 2025 at 11:47 AM IST.
+    Location: Nagpur, Maharashtra, India.
+    Refactored for a CSE student audience.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Membership</title>
+    
+    <style>
+        /* A more modern, tech-inspired theme */
+        :root {
+            --bg-color: #1e1e2f;
+            --form-bg: #27293d;
+            --text-color: #f0f0f0;
+            --label-color: #a9a9b3;
+            --primary-color: #4a90e2;
+            --input-bg: #1e1e2f;
+            --border-color: #444;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: var(--form-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 550px;
+            border: 1px solid var(--border-color);
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--label-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(74, 144, 226, 0.4);
+        }
+
+        .radio-group, .form-group-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-top: 0.25rem;
+        }
+
+        /* Live Validation Styling */
+        .error-message {
+            font-size: 0.8em;
+            min-height: 1.2em;
+            display: block;
+            margin-top: 0.4rem;
+        }
+
+        .valid { border-color: var(--success-color); }
+        .invalid { border-color: var(--error-color); }
+        .error-message.success { color: var(--success-color); }
+        .error-message.error { color: var(--error-color); }
+
+        /* Button Styling */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        button:active:not(:disabled) { transform: translateY(1px); }
+
+        button[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            flex-grow: 1;
+        }
+
+        button[type="submit"]:disabled {
+            background-color: #2a5282;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        button[type="reset"] {
+            background-color: #4a4a5e;
+            color: var(--text-color);
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 1.5rem;
+            border: 1px solid var(--success-color);
+            background-color: rgba(46, 204, 113, 0.1);
+            border-radius: 8px;
+            color: var(--success-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <!-- 
+
+[Image of abstract code binary background]
+ -->
+        <h1>FitCode Gym Membership</h1>
+        
+        <form name="gymForm" id="gymForm" novalidate>
+            <!-- Full Name -->
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" required minlength="3" placeholder="John Doe">
+                <span class="error-message" id="fullNameError"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required placeholder="john.doe@example.com">
+                <span class="error-message" id="emailError"></span>
+            </div>
+
+            <!-- Age -->
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" required min="18" max="60" placeholder="18-60">
+                <span class="error-message" id="ageError"></span>
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group">
+                <label>Gender</label>
+                <div class="radio-group">
+                    <input type="radio" id="male" name="gender" value="Male" required> <label for="male">Male</label>
+                    <input type="radio" id="female" name="gender" value="Female"> <label for="female">Female</label>
+                    <input type="radio" id="other" name="gender" value="Other"> <label for="other">Other</label>
+                </div>
+                <span class="error-message" id="genderError"></span>
+            </div>
+
+            <!-- Membership -->
+            <div class="form-group">
+                <label for="membership">Membership Plan</label>
+                <select id="membership" name="membership" required>
+                    <option value="" disabled selected>-- Select --</option>
+                    <option value="Monthly">Monthly</option>
+                    <option value="Quarterly">Quarterly</option>
+                    <option value="Yearly">Yearly</option>
+                </select>
+                <span class="error-message" id="membershipError"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="********">
+                <span class="error-message" id="passwordError"></span>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="********">
+                <span class="error-message" id="confirmPasswordError"></span>
+            </div>
+
+            <!-- Phone -->
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" name="phone" required placeholder="10 digits only">
+                <span class="error-message" id="phoneError"></span>
+            </div>
+
+            <!-- Date of Birth -->
+            <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob" required>
+                <span class="error-message" id="dobError"></span>
+            </div>
+
+            <!-- Profile Photo -->
+            <div class="form-group">
+                <label for="profilePhoto">Profile Photo (JPG/PNG, &lt; 1MB)</label>
+                <input type="file" id="profilePhoto" name="profilePhoto" accept=".jpg, .jpeg, .png" required>
+                <span class="error-message" id="profilePhotoError"></span>
+            </div>
+
+            <!-- Terms -->
+            <div class="form-group form-group-checkbox">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">Agree to Terms & Conditions</label>
+                <span class="error-message" id="termsError"></span>
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" id="submitBtn" disabled>Join Now</button>
+                <button type="reset">Clear</button>
+            </div>
+        </form>
+
+        <div id="formSuccessMessage" class="success-message" style="display: none;"></div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const gymForm = document.forms['gymForm'];
+        const submitBtn = document.getElementById('submitBtn');
+
+        // --- CORE VALIDATION LOGIC ---
+        // A map of validation functions, keyed by the input's ID.
+        const validators = {
+            fullName: field => {
+                const isValid = field.value.trim().length >= 3 && /^[a-zA-Z\s]+$/.test(field.value);
+                return { isValid, message: isValid ? '✅ Looks good' : '❌ Name requires min 3 alphabetic characters.' };
+            },
+            email: field => {
+                const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim());
+                return { isValid, message: isValid ? '✅ Valid email format' : '❌ Invalid email format.' };
+            },
+            age: field => {
+                const age = parseInt(field.value, 10);
+                const isValid = !isNaN(age) && age >= 18 && age <= 60;
+                return { isValid, message: isValid ? '✅ Age valid' : '❌ Must be between 18 and 60.' };
+            },
+            gender: () => {
+                const isValid = gymForm.querySelector('input[name="gender"]:checked') !== null;
+                return { isValid, message: isValid ? '✅ Gender selected' : '❌ Please select a gender.' };
+            },
+            membership: field => {
+                const isValid = field.value !== "";
+                return { isValid, message: isValid ? '✅ Plan selected' : '❌ Please select a plan.' };
+            },
+            password: field => {
+                const value = field.value;
+                const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(value);
+                return { isValid, message: isValid ? '✅ Strong password' : '❌ Weak: Min 8 chars, incl. uppercase, lowercase, number, symbol.' };
+            },
+            confirmPassword: field => {
+                const isValid = field.value === gymForm.password.value && field.value.length > 0;
+                return { isValid, message: isValid ? '✅ Passwords match' : '❌ Passwords do not match.' };
+            },
+            phone: field => {
+                const isValid = /^\d{10}$/.test(field.value);
+                return { isValid, message: isValid ? '✅ Valid phone number' : '❌ Must be exactly 10 digits.' };
+            },
+            dob: field => {
+                const isValid = field.value !== '' && new Date(field.value) <= new Date();
+                return { isValid, message: isValid ? '✅ Valid date' : '❌ Date cannot be in the future.' };
+            },
+            profilePhoto: field => {
+                const file = field.files[0];
+                if (!file) return { isValid: false, message: '❌ Photo is required.' };
+                const isTypeValid = ['image/jpeg', 'image/png'].includes(file.type);
+                const isSizeValid = file.size <= 1 * 1024 * 1024; // 1MB
+                const isValid = isTypeValid && isSizeValid;
+                let message = '✅ Photo is valid.';
+                if (!isTypeValid) message = '❌ Invalid type (JPG/PNG only).';
+                else if (!isSizeValid) message = '❌ File too large (> 1MB).';
+                return { isValid, message };
+            },
+            terms: field => {
+                const isValid = field.checked;
+                return { isValid, message: isValid ? '✅ Terms accepted' : '❌ You must accept the terms.' };
+            }
+        };
+
+        // --- EVENT HANDLING (using Event Delegation) ---
+        // A single listener on the form handles events for all fields. This is more efficient.
+        const handleValidation = (event) => {
+            const field = event.target;
+            const fieldId = field.id || (field.name === 'gender' ? 'gender' : null);
+
+            if (validators[fieldId]) {
+                const validator = validators[fieldId];
+                // For radio buttons, we need to call validator without passing the field
+                const { isValid, message } = (fieldId === 'gender') ? validator() : validator(field);
+                
+                const errorSpan = document.getElementById(`${fieldId}Error`);
+                const fieldToStyle = (fieldId === 'gender') ? document.querySelector('.radio-group') : field;
+
+                // Update UI: set validity, show message, apply styles
+                field.setCustomValidity(isValid ? '' : message);
+                errorSpan.textContent = message;
+                errorSpan.className = `error-message ${isValid ? 'success' : 'error'}`;
+                fieldToStyle.classList.toggle('valid', isValid);
+                fieldToStyle.classList.toggle('invalid', !isValid);
+
+                // If password changes, re-validate the confirmation field
+                if (fieldId === 'password') {
+                    const confirmField = document.getElementById('confirmPassword');
+                    const { isValid: isConfirmValid, message: confirmMsg } = validators.confirmPassword(confirmField);
+                    document.getElementById('confirmPasswordError').textContent = confirmMsg;
+                    confirmField.setCustomValidity(isConfirmValid ? '' : confirmMsg);
+                }
+
+                // Update submit button state
+                submitBtn.disabled = !gymForm.checkValidity();
+            }
+        };
+
+        gymForm.addEventListener('input', handleValidation);
+        gymForm.addEventListener('change', handleValidation); // For select, file, checkbox, radio
+
+        // --- FORM SUBMISSION & RESET ---
+        gymForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            // Final check on all fields
+            let isFormValid = true;
+            for (const key in validators) {
+                const field = document.getElementById(key) || gymForm.querySelector(`[name=${key}]`);
+                 if (!validators[key](field).isValid) {
+                     isFormValid = false;
+                     // Trigger validation UI for any fields user didn't touch
+                     handleValidation({target: field});
+                 }
+            }
+
+            if (isFormValid) {
+                const successMsg = document.getElementById('formSuccessMessage');
+                successMsg.innerHTML = `<h3>Registration Complete!</h3><p>Welcome to FitCode, <strong>${gymForm.fullName.value}</strong>. We've sent a confirmation to your email.</p>`;
+                gymForm.style.display = 'none';
+                successMsg.style.display = 'block';
+            }
+        });
+
+        gymForm.addEventListener('reset', () => {
+            gymForm.querySelectorAll('.valid, .invalid').forEach(el => el.classList.remove('valid', 'invalid'));
+            gymForm.querySelectorAll('.error-message').forEach(span => {
+                span.textContent = '';
+                span.className = 'error-message';
+            });
+            submitBtn.disabled = true;
+        });
+    });
+    </script>
+</body>
+</html>
+
