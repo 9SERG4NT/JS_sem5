@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Session Form Saver</title>
+</head>
+<body>
+  <h2>Contact Form</h2>
+  <form>
+    <input type="text" id="name" placeholder="Name"><br><br>
+    <input type="email" id="email" placeholder="Email"><br><br>
+    <textarea id="message" placeholder="Your message"></textarea><br><br>
+  </form>
+
+  <script>
+    const fields = ["name", "email", "message"];
+
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      el.value = sessionStorage.getItem(id) || "";
+      el.addEventListener("input", () => {
+        sessionStorage.setItem(id, el.value);
+      });
+    });
+  </script>
+</body>
+</html>

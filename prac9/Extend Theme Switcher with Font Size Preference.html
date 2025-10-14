@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Theme & Font Switcher</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      transition: background-color 0.5s, color 0.5s, font-size 0.5s;
+    }
+    .dark { background-color: #121212; color: white; }
+    .light { background-color: #ffffff; color: black; }
+    button, select {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Theme & Font Switcher</h1>
+  <button id="toggleTheme">Toggle Theme</button>
+  <select id="fontSize">
+    <option value="16px">Small</option>
+    <option value="20px">Medium</option>
+    <option value="24px">Large</option>
+  </select>
+
+  <script>
+    const body = document.body;
+    const btn = document.getElementById("toggleTheme");
+    const fontSelect = document.getElementById("fontSize");
+
+    // Load saved theme and font size
+    const savedTheme = localStorage.getItem("theme") || "light";
+    const savedFont = localStorage.getItem("fontSize") || "16px";
+    body.classList.add(savedTheme);
+    body.style.fontSize = savedFont;
+    fontSelect.value = savedFont;
+
+    btn.textContent = savedTheme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+
+    btn.addEventListener("click", () => {
+      const newTheme = body.classList.contains("dark") ? "light" : "dark";
+      body.className = newTheme;
+      localStorage.setItem("theme", newTheme);
+      btn.textContent = newTheme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+    });
+
+    fontSelect.addEventListener("change", () => {
+      const newSize = fontSelect.value;
+      body.style.fontSize = newSize;
+      localStorage.setItem("fontSize", newSize);
+    });
+  </script>
+</body>
+</html>
