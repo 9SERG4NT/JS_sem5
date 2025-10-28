@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JSON Handling with Fetch and jQuery</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    .highlight {
+      background-color: #d4edda; /* Light green for marks > 90 */
+    }
+    table {
+      margin-bottom: 20px;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px 12px;
+      border: 1px solid #333;
+    }
+  </style>
+</head>
+<body>
+  <h2>Student Records (Using Fetch and jQuery AJAX)</h2>
+
+  <h3>Data from Fetch()</h3>
+  <table id="fetchTable">
+    <tr><td colspan="3">Loading data...</td></tr>
+  </table>
+
+  <h3>Data from $.getJSON()</h3>
+  <table id="jqueryTable">
+    <tr><td colspan="3">Loading data...</td></tr>
+  </table>
+
+  <!-- Embedded JSON data -->
+  <script id="studentData" type="application/json">
+    [
+      { "id": 1, "name": "Alice", "marks": 85, "grade": "A" },
+      { "id": 2, "name": "Bob", "marks": 92 },
+      { "id": 3, "name": "Charlie", "marks": 78 }
+    ]
+  </script>
+
+  <script>
+    // Parse embedded JSON
+    const jsonData = JSON.parse(document.getElementById('studentData').textContent);
+
+    // Simulate delay for Fetch API
+    setTimeout(() => {
+      const table = document.getElementById('fetchTable');
+      table.innerHTML = "<tr><th>ID</th><th>Name</th><th>Marks</th></tr>";
+      jsonData.forEach(student => {
+        const rowClass = student.marks > 90 ? 'class="highlight"' : '';
+        table.innerHTML += `<tr ${rowClass}>
+          <td>${student.id}</td>
+          <td>${student.name}</td>
+          <td>${student.marks}</td>
+        </tr>`;
+      });
+    }, 2000); // 2-second delay
+
+    // jQuery $.getJSON() simulation using embedded data
+    $(document).ready(function() {
+      const table = $('#jqueryTable');
+      table.html("<tr><th>ID</th><th>Name</th><th>Marks</th></tr>");
+      jsonData.forEach(student => {
+        const rowClass = student.marks > 90 ? 'class="highlight"' : '';
+        table.append(`<tr ${rowClass}>
+          <td>${student.id}</td>
+          <td>${student.name}</td>
+          <td>${student.marks}</td>
+        </tr>`);
+      });
+    });
+  </script>
+</body>
+</html>
