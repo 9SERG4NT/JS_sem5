@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personal Dashboard</title>
+    <style>
+        body {
+            font-family: Verdana, sans-serif;
+            transition: all 0.4s ease;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .dark { background-color: #121212; color: white; }
+        .light { background-color: #ffffff; color: black; }
+
+        #controls button, select, input {
+            margin: 6px;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        #controls button {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        body.dark #controls button {
+            background-color: #0056b3;
+        }
+        
+        #resetBtn {
+            background-color: #dc3545;
+        }
+        
+        body.dark #resetBtn {
+            background-color: #a71d2a;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1 id="welcomeText">Welcome!</h1>
+
+    <div id="controls">
+        <input type="text" id="userName" placeholder="Enter your name">
+        <button id="saveUser">Save Name</button>
+        <button id="themeBtn">Switch Theme</button>
+        <select id="fontChooser">
+            <option value="small">Small</option>
+            <option value="medium" selected>Medium</option> <option value="large">Large</option>
+        </select>
+        <button id="resetBtn">Reset Preferences</button>
+    </div>
+
+    <p id="tabCounter"></p>
+
+    <h3>Feedback</h3>
+    <textarea id="feedback" rows="5" cols="40" placeholder="Your feedback..."></textarea>
+
+    <script>
+        // Wrap all logic in window.onload to ensure DOM is ready
+        window.onload = function() {
+            
+            // --- Define element constants ---
+            const themeBtn = document.getElementById("themeBtn");
+            const fSelect = document.getElementById("fontChooser");
+            const saveUserBtn = document.getElementById("saveUser");
+            const userNameInput = document.getElementById("userName");
+            const welcomeText = document.getElementById("welcomeText");
+            const tabCounter = document.getElementById("tabCounter");
+            const feedbackBox = document.getElementById("feedback");
+            const resetBtn = document.getElementById("resetBtn");
+
+            // --- 1. Theme Setup (Fixed) ---
+            // Use one consistent key
+            const themeKey = "dashboardTheme";
+            
+            // Load: Default to "light" if key is missing (null)
+            let currentTheme = localStorage.getItem(themeKey) || "light";
+            document.body.classList.add(currentTheme);
+
+            // Event:
+            themeBtn.onclick = function() {
+                // Toggle logic was okay, but classList assignment was wrong
+                let newTheme = document.body.classList.contains("light") ? "dark" : "light";
+                
+                // Fix: Don't use .classList = ...; use remove/add
+                document.body.classList.remove("light", "dark");
+                document.body.classList.add(newTheme);
+                
+                // Fix: Use the consistent key
+                localStorage.setItem(themeKey, newTheme);
+            };
+
+            // --- 2. Font Size (Fixed) ---
+            // Use one consistent key
+            const fontKey = "dashboardFont";
+
+            // Load:
+            let storedFont = localStorage.getItem(fontKey); // Fix: Use consistent key
+            if (storedFont) {
+                document.body.style.fontSize = storedFont;
+                fSelect.value = storedFont; // Sync dropdown
+            }
+
+            // Event:
+            fSelect.onchange = function() {
+                let f = fSelect.value;
+                document.body.style.fontSize = f;
+                localStorage.setItem(fontKey, f); // Fix: Use consistent key
+            };
+
+            // --- 3. Username (Fixed) ---
+            // Use one consistent key
+            const userKey = "dashboardUser";
+
+            // Load: (This logic was missing)
+            let savedUser = localStorage.getItem(userKey);
+            if (savedUser) {
+                welcomeText.innerText = "Welcome, " + savedUser;
+                userNameInput.value = savedUser; // Also fill the input
+            }
+
+            // Event:
+            saveUserBtn.onclick = function() {
+                let user = userNameInput.value;
+                // Fix: Use setItem and the consistent key
+                localStorage.setItem(userKey, user);
+                // Fix: Update text from the variable, not a mismatched storage key
+                welcomeText.innerText = "Welcome, " + user;
+            };
+
+            // --- 4. Session Counter (Fixed) ---
+            const visitKey = "visits";
+            
+            // Load:
+            // Fix: Get value, convert to Number, default to 0
+            let count = Number(sessionStorage.getItem(visitKey)) || 0;
+            
+            // Fix: Increment *before* saving and displaying
+            count++;
+            
+            // Fix: Save the *new* count
+            sessionStorage.setItem(visitKey, count);
+            
+            // Fix: Display the correct, incremented count
+            tabCounter.innerHTML = `This tab has been refreshed ${count} times.`;
+
+            // --- 5. Feedback (Fixed) ---
+            const feedbackKey = "feedbackText";
+
+            // Load: (This logic was missing)
+            let savedFeedback = sessionStorage.getItem(feedbackKey);
+            if (savedFeedback) {
+                // Fix: Use .value for textarea, not .innerHTML
+                feedbackBox.value = savedFeedback;
+            }
+            
+            // Event:
+            feedbackBox.addEventListener("keyup", () => {
+                // Fix: Use .value to get textarea content
+                sessionStorage.setItem(feedbackKey, feedbackBox.value);
+            });
+            
+            // --- 6. Final Task (Reset Preferences) ---
+            resetBtn.onclick = function() {
+                localStorage.clear(); // Clears *only* persistent storage
+                location.reload();
+            };
+
+        };
+    </script>
+</body>
+</html>
