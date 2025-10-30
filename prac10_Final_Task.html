@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Directory Manager (All-in-One)</title>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        #controls {
+            margin: 20px auto;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: inline-block;
+        }
+        #controls label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: #fff;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+            color: #555;
+        }
+        /* 5. Style for highlighted salary */
+        tr.highlight {
+            background-color: #d4edda; /* Light green */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Employee Directory Manager</h1>
+
+    <div id="controls">
+        <label for="deptFilter">Filter by Department:</label>
+        <select id="deptFilter">
+            <option value="all">Show All</option>
+            </select>
+    </div>
+
+    <h2>Loaded via Fetch API (Simulated)</h2>
+    <div id="fetchTableContainer">
+        <p>Loading data...</p>
+    </div>
+
+    <h2>Loaded via $.getJSON() (Simulated)</h2>
+    <div id="jqueryTableContainer">
+        <p>Loading data...</p>
+    </div>
+
+    <script>
+        // --- Embedded employees.json Data ---
+        const employeeData = [
+          {
+            "id": 101,
+            "name": "Arjun Singh",
+            "department": "Engineering",
+            "salary": 75000
+          },
+          {
+            "id": 102,
+            "name": "Mei Lin",
+            "department": "Marketing",
+            "salary": 52000
+          },
+          {
+            "id": 103,
+            "name": "David Lee",
+            "department": "Engineering",
+            "salary": 80000
+          },
+          {
+            "id": 104,
+            "name": "Sarah Chen",
+            "department": "HR",
+            "salary": 48000
+          },
+          {
+            "id": 105,
+            "name": "Kenji Tanaka",
+            "department": "Marketing",
+            "salary": 49000
+          }
+        ];
+
+        // --- Embedded script.js Logic ---
+
+        // Global variable to hold the master list of employees
+        let allEmployees = [];
+
+        // Wait for the DOM to be fully loaded before running script
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const fetchContainer = document.getElementById('fetchTableContainer');
+            const jqueryContainer = document.getElementById('jqueryTableContainer');
+            const filterSelect = document.getElementById('deptFilter');
+
+            /**
+             * Helper Function 1: Renders a table of employees.
+             * @param {Array} data - The array of employee objects to display.
+             * @param {string} containerId - The ID of the DOM element to build the table in.
+             */
+            function renderTable(data, containerId) {
+                const container = document.getElementById(containerId);
+                
+                // Clear previous content (e.g., "Loading...")
+                container.innerHTML = '';
+
+                if (data.length === 0) {
+                    container.innerHTML = '<p>No employees match the filter.</p>';
+                    return;
+                }
+
+                const table = document.createElement('table');
+                
+                // Create table header
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Salary</th>
+                        </tr>
+                    </thead>
+                `;
+
+                // Create table body
+                const tbody = document.createElement('tbody');
+                data.forEach(emp => {
+                    const row = document.createElement('tr');
+
+                    // 5. Highlight row if salary > 50000
+                    if (emp.salary > 50000) {
+                        row.classList.add('highlight');
+                    }
+
+                    // Populate cells
+                    row.innerHTML = `
+                        <td>${emp.id}</td>
+                        <td>${emp.name}</td>
+                        <td>${emp.department}</td>
+                        <td>${emp.salary}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                table.appendChild(tbody);
+                container.appendChild(table);
+            }
+
+            /**
+             * Helper Function 2: Populates the filter dropdown with unique departments.
+             * (Constraint: Must be generated dynamically)
+             */
+            function populateFilter(employees) {
+                // Use a Set to get only unique department names
+                const departments = employees.map(emp => emp.department);
+                const uniqueDepts = [...new Set(departments)];
+
+                // Create and append <option> elements
+                uniqueDepts.forEach(dept => {
+                    const option = document.createElement('option');
+                    option.value = dept;
+                    option.textContent = dept;
+                    filterSelect.appendChild(option);
+                });
+            }
+
+            /**
+             * Helper Function 3: Filters and re-renders both tables.
+             * (Constraint: Self-written function for filtering)
+             */
+            function filterAndDisplay() {
+                const selectedDept = filterSelect.value;
+
+                let filteredEmployees;
+                if (selectedDept === 'all') {
+                    filteredEmployees = allEmployees; // Show all
+                } else {
+                    // Filter the master list
+                    filteredEmployees = allEmployees.filter(emp => emp.department === selectedDept);
+                }
+
+                // Re-render both tables with the filtered data
+                renderTable(filteredEmployees, 'fetchTableContainer');
+                renderTable(filteredEmployees, 'jqueryTableContainer');
+            }
+
+            // --- Main Execution ---
+
+            // 1. Simulate loading data using the Fetch API
+            // We use Promise.resolve() to mimic a successful fetch
+            Promise.resolve(employeeData)
+                .then(data => {
+                    console.log('Data loaded via Fetch API (Simulated):');
+                    // 6. Use console.table() for debugging
+                    console.table(data);
+
+                    allEmployees = data; // Save to our master list
+
+                    // Initial render of the fetch table
+                    renderTable(allEmployees, 'fetchTableContainer');
+                    
+                    // 3. Populate the filter dropdown (only need to do this once)
+                    populateFilter(allEmployees);
+                })
+                .catch(error => {
+                    console.error('Simulated Fetch API Error:', error);
+                    fetchContainer.innerHTML = '<p style="color: red;">Error loading data with Fetch.</p>';
+                });
+
+            // 2. Simulate loading data using jQuery $.getJSON()
+            // We just use the data directly, but wrap it in jQuery's ready function
+            $(function() {
+                try {
+                    const data = employeeData; // Use the local data
+                    console.log('Data loaded via $.getJSON (Simulated):');
+                    // 6. Use console.table() for debugging
+                    console.table(data);
+                    
+                    // Initial render of the jQuery table
+                    renderTable(data, 'jqueryTableContainer');
+                } catch (error) {
+                    console.error('Simulated jQuery Error:', error);
+                    jqueryContainer.innerHTML = '<p style="color: red;">Error loading data with jQuery.</p>';
+                }
+            });
+
+            // 4. Add the event listener to the dropdown
+            filterSelect.addEventListener('change', filterAndDisplay);
+        });
+    </script>
+
+</body>
+</html>
