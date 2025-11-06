@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiteStatus - Live Uptime Monitor</title>
+  <!-- Load Tailwind CSS for styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Configuration for Tailwind dark mode
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        fontFamily: {
+          'sans': ['Inter', 'sans-serif']
+        }
+      }
+    }
+  </script>
+  
+  <!-- Custom styles for the project -->
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    /* Custom modal styles (for Practical 1) */
+    .modal-overlay {
+      transition: opacity 0.3s ease;
+    }
+    .modal-content {
+      transition: all 0.3s ease;
+    }
+
+    /* Style for the site status */
+    .status-up { border-left-color: #22c55e; /* green-500 */ }
+    .status-down { 
+      border-left-color: #ef4444; /* red-500 */ 
+      animation: pulse-red 2s infinite;
+    }
+    .status-pending { border-left-color: #f59e0b; /* amber-500 */ }
+    
+    /* Animation for "DOWN" status */
+    @keyframes pulse-red {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    }
+    
+    /* Custom error message style */
+    .form-error {
+      color: #ef4444; /* red-500 */
+      font-size: 0.875rem;
+      display: none; /* Hidden by default */
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen p-4 md:p-8">
+
+  <!-- Welcome Modal (for Practical 1) -->
+  <div id="welcome-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+    <div class="modal-content bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md transform scale-95 opacity-0">
+      <h2 class="text-2xl font-bold mb-4">SiteStatus Monitor</h2>
+      <p id="modal-message" class="text-gray-300 mb-6">Welcome! Add websites you want to monitor, and this dashboard will check their status in real-time.</p>
+      <button id="modal-close-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+        Start Monitoring
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Container -->
+  <div class="max-w-6xl mx-auto">
+    
+    <!-- Header: Title and Live Clock -->
+    <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold text-white mb-2 md:mb-0">
+        SiteStatus Monitor
+      </h1>
+      <!-- Practical 11: Target for setInterval -->
+      <div id="live-clock" class="text-xl font-medium bg-gray-800 px-4 py-2 rounded-lg shadow-md">
+        Loading...
+      </div>
+    </header>
+
+    <!-- Main Content: Form and Site List -->
+    <main class="flex flex-col md:flex-row gap-6 md:gap-8">
+      
+      <!-- Left Column: Add Site Form -->
+      <section class="w-full md:w-1/3 bg-gray-800 p-6 rounded-lg shadow-xl self-start">
+        <h2 class="text-2xl font-semibold mb-4">Add New Site</h2>
+        
+        <!-- Practical 6: Form with validation -->
+        <form id="add-site-form" class="space-y-4">
+          <div>
+            <label for="site-name" class="block text-sm font-medium text-gray-300 mb-1">Friendly Name</label>
+            <input type="text" id="site-name" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g., Google">
+          </div>
+          
+          <div>
+            <label for="site-url" class="block text-sm font-medium text-gray-300 mb-1">Website URL</label>
+            <input type="text" id="site-url" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g., google.com">
+          </div>
+          
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 shadow-md">
+            Add & Check
+          </button>
+          
+          <!-- Practical 5: DOM Manipulation target for error messages -->
+          <p id="form-error" class="form-error">Please fill out all fields.</p>
+        </form>
+      </section>
+
+      <!-- Right Column: Site List -->
+      <section class="w-full md:w-2/3">
+        <h2 class="text-2xl font-semibold mb-4">Monitored Sites</h2>
+        
+        <!-- Practical 5 & 7: This div will be populated by JS -->
+        <div id="site-list" class="space-y-4">
+          <!-- Sites will be dynamically inserted here -->
+          <p class="text-gray-400">No sites added yet. Add one to start monitoring!</p>
+        </div>
+      </section>
+      
+    </main>
+    
+    <!-- Footer: Daily Quote -->
+    <footer class="mt-8 md:mt-12 text-center">
+      <h3 class="text-lg font-semibold mb-2">Daily Motivation</h3>
+      <!-- Practical 10: Target for Fetch API -->
+      <figure id="quote-container" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <blockquote class="text-xl italic text-gray-300">
+          <p id="quote-text">Loading quote...</p>
+        </blockquote>
+        <figcaption class="text-right text-gray-400 mt-2">
+          &mdash; <span id="quote-author">...</span>
+        </figcaption>
+      </figure>
+    </footer>
+
+  </div> <!-- End of max-w-6xl container -->
+
+
+  <!-- Main JavaScript for the application -->
+  <script>
+    // Wait for the DOM to be fully loaded before running script
+    document.addEventListener('DOMContentLoaded', () => {
+    
+      // --- Practical 1: Introduction to JS ---
+      // Using console.log for debugging
+      console.log('SiteStatus Monitor Initialized.');
+      // Using 'const' for a variable that won't change
+      const CHECK_INTERVAL = 60000; // 60 seconds
+      
+      // --- Practical 5: DOM Manipulation ---
+      // Selecting elements from the DOM
+      const liveClockElement = document.getElementById('live-clock');
+      const addSiteForm = document.getElementById('add-site-form');
+      const siteNameInput = document.getElementById('site-name');
+      const siteUrlInput = document.getElementById('site-url');
+      const siteListElement = document.getElementById('site-list');
+      const formErrorElement = document.getElementById('form-error');
+      const quoteTextElement = document.getElementById('quote-text');
+      const quoteAuthorElement = document.getElementById('quote-author');
+      const modal = document.getElementById('welcome-modal');
+      const modalContent = modal.querySelector('.modal-content');
+      const modalCloseBtn = document.getElementById('modal-close-btn');
+
+      // --- Practical 7: Objects & Arrays ---
+      // Using an array to store site objects
+      let sites = [];
+      
+      // --- Practical 1: Custom Welcome Message (replaces alert) ---
+      // Practical 4: Defining a function
+      function showWelcomeMessage() {
+        modal.classList.remove('hidden');
+        // Practical 11: Using setTimeout for a one-time delay
+        setTimeout(() => { // Give browser time to apply 'hidden' removal
+            modal.classList.add('opacity-100');
+            modalContent.classList.add('scale-100', 'opacity-100');
+            modalContent.classList.remove('scale-95', 'opacity-0');
+        }, 10);
+      }
+      
+      function closeModal() {
+        modal.classList.remove('opacity-100');
+        modal.classList.add('opacity-0');
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300); // Wait for transition to finish
+      }
+      
+      // Practical 4: Attaching an event listener
+      modalCloseBtn.addEventListener('click', closeModal);
+      showWelcomeMessage();
+
+
+      // --- Practical 4: Functions & Practical 11: Timers (setInterval) ---
+      /**
+       * Updates the live clock element every second.
+       */
+      function updateLiveClock() {
+        const now = new Date();
+        // Practical 5: Updating element's text content
+        liveClockElement.textContent = now.toLocaleTimeString();
+      }
+      
+      // Start the clock
+      // Practical 11: Using setInterval to run a function repeatedly
+      setInterval(updateLiveClock, 1000);
+      updateLiveClock(); // Run once immediately on load
+
+
+      // --- Practical 10: API Handling (Fetch) & Practical 9: Async/Await ---
+      /**
+       * Fetches a random quote from an API and displays it.
+       */
+      async function fetchQuote() {
+        try {
+          // Practical 10: Using the fetch() API to get data
+          const response = await fetch('https://api.quotable.io/random?tags=technology,famous-quotes');
+          if (!response.ok) {
+            // Practical 2: Comparison operator
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          
+          // Practical 8: Object Destructuring
+          const { content, author } = data;
+          
+          // Practical 5: DOM Manipulation
+          quoteTextElement.textContent = `"${content}"`;
+          quoteAuthorElement.textContent = author;
+          
+        } catch (error) {
+          // Practical 1: Console logging for errors
+          console.error('Error fetching quote:', error);
+          quoteTextElement.textContent = "Could not fetch a quote right now. Try refreshing.";
+          quoteAuthorElement.textContent = "Error";
+        }
+      }
+      
+      fetchQuote();
+
+
+      // --- Practical 4: Functions (Handling Form Submit) ---
+      /**
+       * Handles the add site form submission.
+       * @param {Event} event - The form submit event.
+       */
+      function handleFormSubmit(event) {
+        // Practical 6: Form Validation - preventing default submission
+        event.preventDefault();
+        
+        const name = siteNameInput.value.trim();
+        const url = siteUrlInput.value.trim().replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '');
+        
+        // Practical 6: Form Validation
+        // Practical 2: Logical Operators (||, !)
+        if (!name || !url) {
+          formErrorElement.textContent = 'Please fill out all fields.';
+          formErrorElement.style.display = 'block';
+          return;
+        }
+        
+        // Practical 6: Basic regex for URL (simple check)
+        const urlRegex = /^[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(\/\S*)?$/;
+        if (!urlRegex.test(url)) {
+            formErrorElement.textContent = 'Please enter a valid URL (e.g., google.com).';
+            formErrorElement.style.display = 'block';
+            return;
+        }
+        
+        formErrorElement.style.display = 'none';
+        
+        // Practical 7: Creating an object
+        const newSite = {
+          id: Date.now(), // Use timestamp as a unique ID
+          name: name,
+          url: url,
+          status: 'pending', // Initial status
+          lastChecked: null
+        };
+        
+        // Practical 8: ES6+ Spread Operator (to add to start of array)
+        sites = [newSite, ...sites];
+        
+        renderSites();
+        checkSiteStatus(newSite); // Check the new site immediately
+        addSiteForm.reset();
+        
+        // Practical 1: Console logging
+        console.log('New site added:', newSite);
+      }
+      
+      // Practical 4: Attaching event listener to the form
+      addSiteForm.addEventListener('submit', handleFormSubmit);
+
+
+      // --- Practical 3, 5, 7, 8: Rendering the Site List ---
+      /**
+       * Renders all sites from the 'sites' array to the DOM.
+       */
+      function renderSites() {
+        // Practical 5: Clearing DOM content
+        siteListElement.innerHTML = '';
+        
+        // Practical 3: Control Flow (if statement)
+        if (sites.length === 0) {
+          siteListElement.innerHTML = '<p class="text-gray-400">No sites added yet. Add one to start monitoring!</p>';
+          return;
+        }
+        
+        // Practical 7: Array Method (forEach)
+        // Practical 3: Control Flow (Loop)
+        sites.forEach(site => {
+          let statusClass = '';
+          let statusText = '';
+          
+          // Practical 3: Control Flow (switch statement)
+          switch (site.status) {
+            case 'up':
+              statusClass = 'status-up';
+              statusText = 'Up';
+              break;
+            case 'down':
+              statusClass = 'status-down';
+              statusText = 'Down';
+              break;
+            default:
+              statusClass = 'status-pending';
+              statusText = 'Checking...';
+          }
+          
+          const siteCard = document.createElement('div');
+          // Practical 5: Manipulating element classList
+          siteCard.className = `bg-gray-800 p-4 rounded-lg shadow-md border-l-4 ${statusClass} flex justify-between items-center`;
+          
+          // Practical 8: Template Literals for easy HTML string creation
+          siteCard.innerHTML = `
+            <div>
+              <h3 class="text-xl font-semibold">${site.name}</h3>
+              <p class="text-gray-400 text-sm">${site.url}</p>
+              <!-- Practical 3: if (ternary operator) -->
+              <p class="text-gray-500 text-xs mt-1">
+                Last checked: ${site.lastChecked ? site.lastChecked.toLocaleTimeString() : 'Never'}
+              </p>
+            </div>
+            <div class="text-right">
+              <span class="text-lg font-bold">${statusText}</span>
+              <button 
+                class="delete-btn text-gray-500 hover:text-red-500 transition-colors duration-200 ml-4 p-1"
+                data-id="${site.id}"
+                aria-label="Delete site"
+              >
+                <!-- Inline SVG for delete icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+          `;
+          
+          // Practical 5: Appending a new element to the DOM
+          siteListElement.appendChild(siteCard);
+        });
+      }
+      
+      
+      // --- Practical 4: Event Delegation ---
+      /**
+       * Handles clicks on the site list (for deleting sites).
+       */
+      function handleSiteListClick(event) {
+        // Find the closest delete button to where the user clicked
+        const deleteButton = event.target.closest('.delete-btn');
+        
+        // Practical 3: Control Flow (if)
+        if (deleteButton) {
+          // Practical 2: Operator (Number conversion)
+          const idToDelete = Number(deleteButton.dataset.id);
+          
+          // Practical 7: Array Method (filter)
+          sites = sites.filter(site => site.id !== idToDelete);
+          
+          console.log('Site removed, ID:', idToDelete);
+          renderSites();
+        }
+      }
+      
+      // Practical 4: Add one listener to the parent container
+      siteListElement.addEventListener('click', handleSiteListClick);
+
+
+      // --- Practical 9 & 10: Async JS, Fetch API ---
+      /**
+       * Checks the status of a single site using an external API.
+       * @param {object} site - The site object to check.
+       */
+      async function checkSiteStatus(site) {
+        // Use a proxy to avoid CORS issues, or a dedicated API
+        const API_URL = `https://api.downfor.everyone.or.justme.com/v3/isup?host=${site.url}`;
+        
+        try {
+          // Practical 10: Fetching from the uptime API
+          const response = await fetch(API_URL);
+          
+          // Practical 2: Comparison Operator
+          if (!response.ok) {
+            throw new Error(`API error: ${response.statusText}`);
+          }
+          
+          const data = await response.json();
+          
+          // Practical 3: if/else
+          if (data.isDown) {
+            site.status = 'down';
+          } else {
+            site.status = 'up';
+          }
+          
+        } catch (error) {
+          // If the API fails, or domain doesn't resolve, mark as down
+          console.error('Error checking site:', site.url, error);
+          site.status = 'down';
+        }
+        
+        site.lastChecked = new Date();
+        renderSites(); // Re-render the list with the new status
+      }
+      
+      /**
+       * Loops through all sites and checks their status.
+       */
+      function checkAllSites() {
+        // Practical 1: Console logging
+        console.log('Running periodic check of all sites...');
+        // Practical 7: Array Method (forEach)
+        sites.forEach(checkSiteStatus);
+      }
+
+      // --- Practical 11: Timers (setInterval) ---
+      // Run the check for all sites every CHECK_INTERVAL milliseconds
+      setInterval(checkAllSites, CHECK_INTERVAL);
+
+      // --- Practical 11: Modules (Comment) ---
+      // Note on Practical 11: This project uses `setTimeout` and `setInterval`.
+      // The other part of Practical 11, ES6 Modules (import/export),
+      // is not used here to keep the entire project in a single,
+      // easy-to-run HTML file. In a larger project, the functions
+      // (e.g., fetchQuote, renderSites, checkSiteStatus) would be
+      // split into separate .js files (like ui.js, api.js) and imported.
+
+      // Initial render on page load
+      renderSites();
+      
+    });
+  </script>
+
+</body>
+</html>
