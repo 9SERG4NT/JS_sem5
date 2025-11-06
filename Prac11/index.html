@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Timers, Dynamic UI & Modular Design</title>
+  <style>
+    body { 
+      font-family: Arial; 
+      padding: 20px; 
+      transition: background 0.3s, font-size 0.3s; /* Smooth transitions */
+    }
+    /* Each class session block */
+    .session {
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer; /* Indicate it's clickable */
+    }
+    /* Highlight active session */
+    .active {
+      background: #c8f7c5;
+      border-color: #5cb85c;
+    }
+    
+    /* --- TASK 2: Style for countdown warning --- */
+    #countdown.warning {
+      color: red;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+    
+    /* Style for the new button */
+    #addSessionBtn {
+      margin-top: 15px;
+      padding: 8px 12px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Class Scheduler (with Timers & Modules)</h2>
+
+  <div id="sessions">
+    <div class="session" data-time="09:00">HTML Basics - 9:00 AM</div>
+    <div class="session" data-time="10:00">CSS Design - 10:00 AM</div>
+    <div class="session" data-time="11:00">JavaScript Logic - 11:00 AM</div>
+  </div>
+
+  <button id="addSessionBtn">Add New Session</button>
+
+  <p id="countdown"></p>
+
+  <script type="module" src="main.js"></script>
+
+</body>
+</html>
